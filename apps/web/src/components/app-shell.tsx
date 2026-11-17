@@ -1,283 +1,343 @@
 "use client";
 
+import { useState, useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
 import {
+  OverviewIcon,
+  InvestigationsIcon,
+  CompareIcon,
+  RequestExplorerIcon,
+  ReportsIcon,
+  SettingsIcon,
+  SearchIcon,
+  CommandIcon,
+  MenuIcon,
+  CloseIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CloseIcon,
-  CompareIcon,
-  FolderIcon,
-  InvestigationsIcon,
-  MenuIcon,
-  NetworkIcon,
-  OverviewIcon,
-  ReportsIcon,
-  RequestExplorerIcon,
-  SearchIcon,
-  SettingsIcon,
-  SparkIcon
+  LockIcon,
 } from "./icons";
+import { Logo } from "./brand/logo";
 import { ThemeToggle } from "./theme-toggle";
+import { CommandPalette } from "./command-palette";
 
-const navigationItems = [
+interface NavItem {
+  label: string;
+  href: string;
+  icon: typeof OverviewIcon;
+}
+
+const NAV_ITEMS: NavItem[] = [
   { label: "Overview", href: "/", icon: OverviewIcon },
   { label: "Investigations", href: "/investigations", icon: InvestigationsIcon },
   { label: "Compare Sessions", href: "/compare", icon: CompareIcon },
   { label: "Request Explorer", href: "/request-explorer", icon: RequestExplorerIcon },
-  { label: "Reports", href: "/reports", icon: ReportsIcon }
+  { label: "Reports", href: "/reports", icon: ReportsIcon },
 ];
 
-const workspaceItems = [
-  { label: "New investigation", href: "/new-investigation" },
-  { label: "Settings", href: "/settings" }
-];
-
-function LogoMark() {
-  return (
-    <div className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--accent)]/40 bg-[linear-gradient(135deg,rgba(32,240,255,0.2),rgba(13,148,136,0.08))] text-[var(--accent)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.08)]">
-      <NetworkIcon size={18} />
-      <span className="absolute inset-1 rounded-lg border border-[var(--accent)]/20" />
-    </div>
-  );
+interface AppShellProps {
+  title?: string;
+  description?: string;
+  actions?: ReactNode;
+  children: ReactNode;
 }
 
-export function AppShell({
-  title,
-  description,
-  children
-}: {
-  title: string;
-  description?: string;
-  children: ReactNode;
-}) {
+export function AppShell({ title, description, actions, children }: AppShellProps) {
   const pathname = usePathname();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
-  const activeItem = navigationItems.find((item) => item.href === pathname) ?? navigationItems[0];
+  // Restore sidebar state from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("acs-sidebar-collapsed");
+      if (saved !== null) {
+        setCollapsed(saved === "true");
+      }
+    } catch {
+      // storage unavailable
+    }
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("acs-sidebar-collapsed", String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Handle global Escape key for mobile drawer
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileOpen) {
+        setMobileOpen(false);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileOpen]);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--foreground)] transition-colors duration-200">
-      <div className="lg:hidden">
-        {mobileOpen ? (
-          <div className="fixed inset-0 z-30 bg-slate-950/70 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-        ) : null}
-      </div>
+    <div className="min-h-screen bg-bg text-text flex">
+      {/* Mobile scrim / backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden animate-in fade-in duration-150"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden
+        />
+      )}
 
+      {/* Sidebar (Desktop + Mobile Drawer) */}
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-40 border-r border-[var(--border)] bg-[var(--panel)]/95 backdrop-blur-xl transition-all duration-300",
-          "shadow-[0_20px_45px_rgba(2,6,23,0.25)]",
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          sidebarCollapsed ? "w-24" : "w-[18rem]",
-          "lg:translate-x-0"
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-line bg-surface-1 transition-all duration-150 ease-out",
+          mobileOpen ? "translate-x-0 w-sidebar" : "-translate-x-full lg:translate-x-0",
+          collapsed ? "lg:w-sidebar-collapsed" : "lg:w-sidebar",
         ].join(" ")}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-4">
-            {!sidebarCollapsed ? (
-              <div className="flex items-center gap-3 overflow-hidden">
-                <LogoMark />
-                <div className="min-w-0">
-                  <p className="truncate text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-                    API
-                  </p>
-                  <p className="truncate text-sm font-semibold text-[var(--foreground)]">Crime Scene</p>
-                </div>
-              </div>
-            ) : (
-              <div className="mx-auto">
-                <LogoMark />
-              </div>
-            )}
-
+        {/* Brand & collapse header */}
+        <div
+          className={`h-topbar flex items-center border-b border-line ${
+            collapsed ? "justify-center px-2" : "justify-between px-4"
+          }`}
+        >
+          {collapsed ? (
             <button
               type="button"
-              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-              onClick={() => setSidebarCollapsed((current) => !current)}
-              className="hidden h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:border-[var(--accent)]/40 hover:text-[var(--foreground)] lg:flex"
+              onClick={toggleCollapsed}
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text transition-colors duration-150"
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
             >
-              {sidebarCollapsed ? <ChevronRightIcon size={14} /> : <ChevronLeftIcon size={14} />}
+              <ChevronRightIcon size={14} />
             </button>
+          ) : (
+            <>
+              <Link
+                href="/"
+                className="flex items-center gap-2.5 overflow-hidden text-text hover:text-accent transition-colors duration-150"
+                title="API Crime Scene"
+              >
+                <Logo size={20} className="shrink-0 text-accent" />
+                <span className="font-serif text-16 tracking-tight font-medium whitespace-nowrap">
+                  API Crime Scene
+                </span>
+              </Link>
+
+              {/* Desktop collapse button */}
+              <button
+                type="button"
+                onClick={toggleCollapsed}
+                className="hidden lg:flex h-7 w-7 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text transition-colors duration-150"
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar"
+              >
+                <ChevronLeftIcon size={14} />
+              </button>
+            </>
+          )}
+
+          {/* Mobile close button */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="lg:hidden flex h-7 w-7 items-center justify-center rounded-control text-text-3 hover:text-text ml-auto"
+            aria-label="Close navigation"
+          >
+            <CloseIcon size={16} />
+          </button>
+        </div>
+
+        {/* Navigation list */}
+        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1" aria-label="Main navigation">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const IconCmp = item.icon;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                title={collapsed && !mobileOpen ? item.label : undefined}
+                className={[
+                  "group relative flex items-center gap-3 rounded-control px-2.5 py-2 text-14 transition-colors duration-150 ease-out",
+                  isActive
+                    ? "bg-accent-soft text-text font-medium"
+                    : "text-text-2 hover:bg-surface-2 hover:text-text",
+                  collapsed && !mobileOpen ? "justify-center px-0" : "",
+                ].join(" ")}
+              >
+                {/* 2px accent bar on left edge when active */}
+                {isActive && (
+                  <span
+                    className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-accent rounded-r"
+                    aria-hidden
+                  />
+                )}
+
+                <span
+                  className={[
+                    "shrink-0",
+                    isActive ? "text-accent" : "text-text-3 group-hover:text-text",
+                  ].join(" ")}
+                >
+                  <IconCmp size={18} />
+                </span>
+
+                {(!collapsed || mobileOpen) && (
+                  <span className="truncate">{item.label}</span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Local-only workspace block */}
+        {(!collapsed || mobileOpen) && (
+          <div className="mx-3 mb-3 p-3 rounded-panel border border-line bg-surface-2/60">
+            <div className="flex items-center gap-2 text-text-2">
+              <LockIcon size={14} className="text-accent shrink-0" />
+              <span className="font-mono text-11 uppercase tracking-wider text-text-3 font-medium">
+                Local Workspace
+              </span>
+            </div>
+            <p className="mt-1 text-12 text-text-3 leading-snug">
+              Processed in this browser. Zero cloud telemetry.
+            </p>
           </div>
+        )}
 
-          <nav className="flex-1 space-y-5 px-3 py-5">
-            <div className="space-y-1">
-              {navigationItems.map(({ label, href, icon: Icon }) => {
-                const isActive = pathname === href;
-                return (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileOpen(false)}
-                    className={[
-                      "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
-                      isActive
-                        ? "bg-[var(--surface-strong)] text-[var(--foreground)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.12)]"
-                        : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--foreground)]",
-                      sidebarCollapsed ? "justify-center px-2" : ""
-                    ].join(" ")}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <Icon size={16} className={isActive ? "text-[var(--accent)]" : "text-current"} />
-                    {!sidebarCollapsed ? <span className="truncate">{label}</span> : null}
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div className="border-t border-[var(--border)] pt-4">
-              {!sidebarCollapsed ? (
-                <div className="mb-3 px-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
-                  Workspace
-                </div>
-              ) : null}
-              <div className="space-y-1">
-                {workspaceItems.map(({ label, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileOpen(false)}
-                    className={[
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors duration-200",
-                      pathname === href ? "bg-[var(--surface-strong)] text-[var(--foreground)]" : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--foreground)]",
-                      sidebarCollapsed ? "justify-center px-2" : ""
-                    ].join(" ")}
-                  >
-                    {href === "/new-investigation" ? <FolderIcon size={16} /> : <SettingsIcon size={16} />}
-                    {!sidebarCollapsed ? <span>{label}</span> : null}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </nav>
-
-          <div className="border-t border-[var(--border)] px-3 py-4">
-            <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[11px] font-semibold text-[var(--accent)]">
-                KS
-              </div>
-              {!sidebarCollapsed ? (
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[var(--foreground)]">Kartik S.</p>
-                  <p className="truncate text-[11px] text-[var(--muted)]">Workspace</p>
-                </div>
-              ) : null}
-            </div>
-          </div>
+        {/* Settings link at bottom */}
+        <div className="border-t border-line p-2">
+          <Link
+            href="/settings"
+            title={collapsed && !mobileOpen ? "Settings" : undefined}
+            className={[
+              "group relative flex items-center gap-3 rounded-control px-2.5 py-2 text-14 transition-colors duration-150 ease-out",
+              pathname === "/settings"
+                ? "bg-accent-soft text-text font-medium"
+                : "text-text-2 hover:bg-surface-2 hover:text-text",
+              collapsed && !mobileOpen ? "justify-center px-0" : "",
+            ].join(" ")}
+          >
+            {pathname === "/settings" && (
+              <span
+                className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-accent rounded-r"
+                aria-hidden
+              />
+            )}
+            <span
+              className={[
+                "shrink-0",
+                pathname === "/settings" ? "text-accent" : "text-text-3 group-hover:text-text",
+              ].join(" ")}
+            >
+              <SettingsIcon size={18} />
+            </span>
+            {(!collapsed || mobileOpen) && <span>Settings</span>}
+          </Link>
         </div>
       </aside>
 
-      <div className={sidebarCollapsed ? "lg:pl-24" : "lg:pl-72"}>
-        <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <button
-                type="button"
-                aria-label="Open navigation menu"
-                onClick={() => setMobileOpen(true)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:text-[var(--foreground)] lg:hidden"
-              >
-                <MenuIcon size={16} />
-              </button>
+      {/* Main content area */}
+      <div
+        className={[
+          "flex-1 flex flex-col min-w-0 transition-all duration-150 ease-out",
+          collapsed ? "lg:pl-sidebar-collapsed" : "lg:pl-sidebar",
+        ].join(" ")}
+      >
+        {/* Topbar: 52px */}
+        <header className="sticky top-0 z-30 h-topbar border-b border-line bg-surface-1/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Mobile menu trigger */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text"
+              aria-label="Open navigation"
+            >
+              <MenuIcon size={16} />
+            </button>
 
-              <div className="hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--muted)] sm:flex">
-                <SparkIcon size={12} className="text-[var(--accent)]" />
-                {activeItem.label}
-              </div>
-
-              <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[var(--muted)]">
-                  Workspace
-                </p>
-                <h1 className="truncate text-lg font-semibold text-[var(--foreground)] sm:text-xl">{title}</h1>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                className="hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)] sm:inline-flex"
-              >
-                <SearchIcon size={14} />
-                Search
-              </button>
-
-              <ThemeToggle />
-
-              <button
-                type="button"
-                aria-label="Profile menu"
-                className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-sm text-[var(--foreground)] transition hover:border-[var(--accent)]/40"
-              >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[10px] font-semibold text-[var(--accent)]">
-                  KS
+            {/* Breadcrumb or title */}
+            <div className="truncate">
+              <span className="font-mono text-11 uppercase tracking-wider text-text-3">
+                API Crime Scene
+              </span>
+              {title && (
+                <span className="ml-2 text-13 font-medium text-text hidden sm:inline">
+                  / {title}
                 </span>
-                <span className="hidden sm:inline">Kartik</span>
-              </button>
+              )}
             </div>
+          </div>
+
+          {/* Right side controls: Search / Cmd+K, Theme, Actions */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Search field opening command palette */}
+            <button
+              type="button"
+              onClick={() => setCommandPaletteOpen(true)}
+              className="hidden sm:flex items-center gap-2 h-8 px-3 rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text hover:border-accent transition-colors duration-150 text-12 font-mono"
+            >
+              <SearchIcon size={14} />
+              <span>Search exhibits…</span>
+              <kbd className="ml-2 flex items-center gap-0.5 px-1 py-0.5 rounded border border-line-strong bg-surface-1 text-11 text-text-3">
+                <CommandIcon size={10} />
+                <span>K</span>
+              </kbd>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCommandPaletteOpen(true)}
+              className="sm:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text"
+              aria-label="Search"
+            >
+              <SearchIcon size={16} />
+            </button>
+
+            {/* Theme switcher */}
+            <ThemeToggle />
+
+            {/* Contextual actions */}
+            {actions}
           </div>
         </header>
 
-        <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:py-8">
-          {description ? (
-            <div className="mb-6 flex flex-col gap-2 border-b border-[var(--border)] pb-5">
-              <h2 className="text-sm font-medium uppercase tracking-[0.24em] text-[var(--muted)]">Overview</h2>
-              <p className="max-w-3xl text-sm text-[var(--muted)] sm:text-base">{description}</p>
-            </div>
-          ) : null}
+        {/* Page Content */}
+        <main id="main-content" className="flex-1 w-full max-w-content mx-auto px-4 sm:px-6 py-6 md:py-8">
+          {description && (
+            <p className="mb-6 text-14 text-text-3 max-w-2xl leading-relaxed">
+              {description}
+            </p>
+          )}
           {children}
         </main>
       </div>
 
-      <div className="lg:hidden">
-        <aside
-          className={[
-            "fixed inset-y-0 left-0 z-50 w-[18rem] border-r border-[var(--border)] bg-[var(--panel)]/95 p-3 backdrop-blur-xl transition-transform duration-300",
-            mobileOpen ? "translate-x-0" : "-translate-x-full"
-          ].join(" ")}
-        >
-          <div className="mb-4 flex items-center justify-between px-2 pt-2">
-            <div className="flex items-center gap-3">
-              <LogoMark />
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.24em] text-[var(--muted)]">API</p>
-                <p className="text-sm font-semibold">Crime Scene</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              aria-label="Close navigation menu"
-              onClick={() => setMobileOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]"
-            >
-              <CloseIcon size={14} />
-            </button>
-          </div>
-
-          <nav className="space-y-1">
-            {navigationItems.map(({ label, href, icon: Icon }) => {
-              const isActive = pathname === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className={[
-                    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
-                    isActive ? "bg-[var(--surface-strong)] text-[var(--foreground)]" : "text-[var(--muted)]"
-                  ].join(" ")}
-                >
-                  <Icon size={16} className={isActive ? "text-[var(--accent)]" : "text-current"} />
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
-      </div>
+      {/* Command Palette Modal */}
+      <CommandPalette
+        open={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+      />
     </div>
   );
 }
