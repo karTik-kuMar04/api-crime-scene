@@ -40,6 +40,9 @@ const config: Config = {
         info: "var(--info)",
       },
       spacing: {
+        sidebar: "248px",
+        "sidebar-collapsed": "64px",
+        topbar: "52px",
         "1": "4px",
         "2": "8px",
         "3": "12px",

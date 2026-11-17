@@ -113,36 +113,52 @@ export function AppShell({ title, description, actions, children }: AppShellProp
         ].join(" ")}
       >
         {/* Brand & collapse header */}
-        <div className="h-topbar flex items-center justify-between border-b border-line px-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 overflow-hidden text-text hover:text-accent transition-colors duration-150"
-            title="API Crime Scene"
-          >
-            <Logo size={20} className="shrink-0 text-accent" />
-            {(!collapsed || mobileOpen) && (
-              <span className="font-serif text-16 tracking-tight font-medium whitespace-nowrap">
-                API Crime Scene
-              </span>
-            )}
-          </Link>
+        <div
+          className={`h-topbar flex items-center border-b border-line ${
+            collapsed ? "justify-center px-2" : "justify-between px-4"
+          }`}
+        >
+          {collapsed ? (
+            <button
+              type="button"
+              onClick={toggleCollapsed}
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150"
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+            >
+              <ChevronRightIcon size={14} />
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/"
+                className="flex items-center gap-2.5 overflow-hidden text-text hover:text-accent transition-colors duration-150"
+                title="API Crime Scene"
+              >
+                <Logo size={20} className="shrink-0 text-accent" />
+                <span className="font-serif text-16 tracking-tight font-medium whitespace-nowrap">
+                  API Crime Scene
+                </span>
+              </Link>
 
-          {/* Desktop collapse button */}
-          <button
-            type="button"
-            onClick={toggleCollapsed}
-            className="hidden lg:flex h-7 w-7 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <ChevronRightIcon size={14} /> : <ChevronLeftIcon size={14} />}
-          </button>
+              {/* Desktop collapse button */}
+              <button
+                type="button"
+                onClick={toggleCollapsed}
+                className="hidden lg:flex h-7 w-7 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150"
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar"
+              >
+                <ChevronLeftIcon size={14} />
+              </button>
+            </>
+          )}
 
           {/* Mobile close button */}
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden flex h-7 w-7 items-center justify-center rounded-control text-text-3 hover:text-text"
+            className="lg:hidden flex h-7 w-7 items-center justify-center rounded-control text-text-3 hover:text-text ml-auto"
             aria-label="Close navigation"
           >
             <CloseIcon size={16} />

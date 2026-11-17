@@ -234,3 +234,22 @@ html:not([data-no-transition]) body * {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-3);
 }
+
+/* ------------------------------------------------------------------ */
+/* Layout & Sidebar Sizing Utilities                                   */
+/* ------------------------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  .lg\:w-sidebar {
+    width: 248px;
+  }
+  .lg\:w-sidebar-collapsed {
+    width: 64px;
+  }
+  .lg\:pl-sidebar {
+    padding-left: 248px;
+  }
+  .lg\:pl-sidebar-collapsed {
+    padding-left: 64px;
+  }
+}
