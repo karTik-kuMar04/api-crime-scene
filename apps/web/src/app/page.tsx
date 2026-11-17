@@ -1,77 +1,156 @@
-export const dynamic = "force-dynamic";
+import Link from "next/link";
+import {
+  BadgeCheckIcon,
+  FolderIcon,
+  NetworkIcon,
+  PlusIcon,
+  ShieldIcon,
+  SparkIcon,
+  UploadIcon
+} from "@/components/icons";
+import { AppShell } from "@/components/app-shell";
 
-async function getApiStatus() {
-  const url = process.env.API_INTERNAL_URL ?? "http://localhost:4000/health";
+const metrics = [
+  { label: "Total investigations", value: "0", description: "No HAR sessions yet" },
+  { label: "Requests analyzed", value: "0", description: "Awaiting import" },
+  { label: "Failed requests", value: "0", description: "No errors detected" },
+  { label: "Potential issues", value: "0", description: "No findings yet" }
+];
 
-  try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return "unavailable";
-    return "connected";
-  } catch {
-    return "unavailable";
+const gettingStarted = [
+  {
+    title: "Export a HAR",
+    text: "Capture browser traffic with DevTools and save a HAR record. Keep the session scoped to the investigation you need.",
+    icon: NetworkIcon
+  },
+  {
+    title: "Import locally",
+    text: "Bring the file into API Crime Scene and validate the payload before processing or comparison.",
+    icon: UploadIcon
+  },
+  {
+    title: "Inspect requests",
+    text: "Review methods, timing, status codes, and headers to isolate suspicious or failing network activity.",
+    icon: FolderIcon
+  },
+  {
+    title: "Compare and report",
+    text: "Measure regressions across sessions, summarize issues, and prepare a privacy-safe record for handoff.",
+    icon: ShieldIcon
   }
-}
+];
 
-export default async function HomePage() {
-  const apiStatus = await getApiStatus();
-
+export default function OverviewPage() {
   return (
-    <main className="min-h-screen bg-[#090d16] text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8">
-        <header className="flex items-center justify-between border-b border-white/10 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-lg font-bold text-cyan-300">
-              A
-            </div>
-            <div>
-              <p className="font-semibold tracking-wide">API CRIME SCENE</p>
-              <p className="text-xs text-slate-500">Network forensics workspace</p>
-            </div>
-          </div>
-          <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-            Foundation v0.1
-          </span>
-        </header>
-
-        <section className="flex flex-1 flex-col justify-center py-20">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-cyan-300">
-            Understand what happened on the wire
-          </p>
-          <h1 className="max-w-3xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
-            Every request leaves a trail.
-            <span className="block text-slate-500">Find the evidence.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">
-            A privacy-first workspace for inspecting browser network recordings,
-            investigating failures and comparing performance.
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
-              <p className="text-xs text-slate-500">Frontend</p>
-              <p className="mt-1 text-sm font-medium text-emerald-300">Running</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
-              <p className="text-xs text-slate-500">Backend API</p>
-              <p className={`mt-1 text-sm font-medium ${apiStatus === "connected" ? "text-emerald-300" : "text-amber-300"}`}>
-                {apiStatus === "connected" ? "Connected" : "Not connected"}
-              </p>
-            </div>
+    <AppShell
+      title="Network investigations"
+      description="High-signal inspection for browser traffic, request anomalies, and session comparisons. Import a HAR to begin a new forensics workflow."
+    >
+      <div className="space-y-6">
+        <section className="flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 shadow-[0_16px_30px_rgba(15,23,42,0.12)] sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--muted)]">Workspace</p>
+            <h2 className="text-2xl font-semibold text-[var(--foreground)] sm:text-3xl">Investigate every request trail.</h2>
           </div>
 
-          <div className="mt-16 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-8">
-            <p className="text-sm font-medium text-slate-300">Next milestone</p>
-            <p className="mt-2 text-2xl font-semibold">HAR upload and parsing</p>
-            <p className="mt-2 text-sm text-slate-500">
-              The repository foundation is ready. The investigation workflow will be built next.
-            </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/new-investigation"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-slate-950 transition hover:opacity-95"
+            >
+              <PlusIcon size={16} />
+              New investigation
+            </Link>
+            <Link
+              href="/new-investigation"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]/40 hover:text-[var(--foreground)]"
+            >
+              <UploadIcon size={16} />
+              Import HAR
+            </Link>
           </div>
         </section>
 
-        <footer className="border-t border-white/10 pt-5 text-xs text-slate-600">
-          API Crime Scene · Built for developers · Local-first by design
-        </footer>
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--muted)]">{metric.label}</p>
+              <p className="mt-3 text-3xl font-semibold text-[var(--foreground)]">{metric.value}</p>
+              <p className="mt-2 text-sm text-[var(--muted)]">{metric.description}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-[1.7fr,1fr]">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">Investigations</p>
+                <h3 className="mt-2 text-xl font-semibold text-[var(--foreground)]">Recent investigations</h3>
+              </div>
+              <Link href="/investigations" className="text-sm font-medium text-[var(--accent)]">
+                View all
+              </Link>
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+              <table className="min-w-full divide-y divide-[var(--border)] text-left text-sm">
+                <thead className="bg-[var(--surface-strong)] text-[var(--muted)]">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Investigation</th>
+                    <th className="px-4 py-3 font-medium">Source</th>
+                    <th className="px-4 py-3 font-medium">Requests</th>
+                    <th className="px-4 py-3 font-medium">Issues</th>
+                    <th className="px-4 py-3 font-medium">Modified</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colSpan={6} className="px-4 py-10 text-center text-[var(--muted)]">
+                      <div className="mx-auto flex max-w-sm flex-col items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-strong)] text-[var(--accent)]">
+                          <BadgeCheckIcon size={19} />
+                        </div>
+                        <div>
+                          <p className="text-base font-medium text-[var(--foreground)]">No investigations yet</p>
+                          <p className="mt-1 text-sm text-[var(--muted)]">Import a HAR or create a new investigation to begin tracking network activity.</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)]">
+                <SparkIcon size={18} />
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">Getting started</p>
+                <h3 className="mt-1 text-xl font-semibold text-[var(--foreground)]">Import a HAR</h3>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {gettingStarted.map(({ title, text, icon: Icon }) => (
+                <div key={title} className="flex gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3">
+                  <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface-strong)] text-[var(--accent)]">
+                    <Icon size={16} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-[var(--foreground)]">{title}</p>
+                    <p className="mt-1 text-sm text-[var(--muted)]">{text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
-    </main>
+    </AppShell>
   );
 }
