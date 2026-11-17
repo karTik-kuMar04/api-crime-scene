@@ -12,7 +12,6 @@ import {
   CheckIcon,
   AlertIcon,
   ShieldIcon,
-  LockIcon,
   ChevronRightIcon,
 } from "@/components/icons";
 import {
@@ -78,7 +77,6 @@ export default function NewInvestigationPage() {
         cleanName || `${result.sourceDomain} Network Capture`
       );
     } catch (err) {
-      console.error("Parse error:", err);
       const msg = err instanceof Error ? err.message : "Failed to process HAR recording.";
       setErrorMessage(msg);
       setActiveStep(1);
@@ -127,8 +125,7 @@ export default function NewInvestigationPage() {
 
       await saveInvestigation(newInv);
       router.push(`/request-explorer?id=${id}`);
-    } catch (err) {
-      console.error("Failed to save investigation:", err);
+    } catch {
       setErrorMessage("Could not write record to local storage.");
       setSaving(false);
     }

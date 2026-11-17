@@ -11,16 +11,14 @@ import { WaterfallRuler } from "@/components/waterfall-ruler";
 import {
   SearchIcon,
   FilterIcon,
-  CloseIcon,
   PlusIcon,
-  ChevronRightIcon,
   CopyIcon,
   CheckIcon,
 } from "@/components/icons";
 import { isSensitiveHeader, isSensitiveQueryParam } from "@/lib/redaction";
 import { getInvestigations, getInvestigation } from "@/lib/storage";
 import { formatExhibitId, formatBytes } from "@/lib/har-parser";
-import type { Investigation, HarEntry } from "@/lib/types";
+import type { Investigation } from "@/lib/types";
 
 type DetailTab = "overview" | "headers" | "request" | "response" | "timing";
 
@@ -100,8 +98,8 @@ function RequestExplorerContent() {
             if (!isNaN(exIdx)) setSelectedIndex(exIdx);
           }
         }
-      } catch (err) {
-        console.error("Failed to load investigation:", err);
+      } catch {
+        /* keep empty explorer state */
       } finally {
         setLoading(false);
       }
