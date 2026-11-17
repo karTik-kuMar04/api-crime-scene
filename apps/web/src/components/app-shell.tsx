@@ -122,7 +122,7 @@ export function AppShell({ title, description, actions, children }: AppShellProp
             <button
               type="button"
               onClick={toggleCollapsed}
-              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150"
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text transition-colors duration-150"
               aria-label="Expand sidebar"
               title="Expand sidebar"
             >
@@ -145,7 +145,7 @@ export function AppShell({ title, description, actions, children }: AppShellProp
               <button
                 type="button"
                 onClick={toggleCollapsed}
-                className="hidden lg:flex h-7 w-7 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150"
+                className="hidden lg:flex h-7 w-7 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text transition-colors duration-150"
                 aria-label="Collapse sidebar"
                 title="Collapse sidebar"
               >
@@ -270,7 +270,7 @@ export function AppShell({ title, description, actions, children }: AppShellProp
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text"
+              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text"
               aria-label="Open navigation"
             >
               <MenuIcon size={16} />
@@ -295,11 +295,11 @@ export function AppShell({ title, description, actions, children }: AppShellProp
             <button
               type="button"
               onClick={() => setCommandPaletteOpen(true)}
-              className="hidden sm:flex items-center gap-2 h-8 px-3 rounded-control border border-line bg-surface-2 text-text-3 hover:text-text hover:border-line-strong transition-colors duration-150 text-12 font-mono"
+              className="hidden sm:flex items-center gap-2 h-8 px-3 rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text hover:border-accent transition-colors duration-150 text-12 font-mono"
             >
               <SearchIcon size={14} />
               <span>Search exhibits…</span>
-              <kbd className="ml-2 flex items-center gap-0.5 px-1 py-0.5 rounded border border-line bg-surface-1 text-11 text-text-3">
+              <kbd className="ml-2 flex items-center gap-0.5 px-1 py-0.5 rounded border border-line-strong bg-surface-1 text-11 text-text-3">
                 <CommandIcon size={10} />
                 <span>K</span>
               </kbd>
@@ -308,7 +308,7 @@ export function AppShell({ title, description, actions, children }: AppShellProp
             <button
               type="button"
               onClick={() => setCommandPaletteOpen(true)}
-              className="sm:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line bg-surface-2 text-text-3 hover:text-text"
+              className="sm:hidden flex h-8 w-8 items-center justify-center rounded-control border border-line-strong bg-surface-2 text-text-3 hover:text-text"
               aria-label="Search"
             >
               <SearchIcon size={16} />

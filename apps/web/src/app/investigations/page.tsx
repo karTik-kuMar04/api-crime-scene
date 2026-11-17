@@ -135,7 +135,7 @@ export default function InvestigationsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by case title or domain…"
-              className="w-full bg-surface-2 border border-line rounded-control pl-8 pr-3 py-1.5 text-13 text-text placeholder-text-3 outline-none focus:border-accent"
+              className="w-full bg-surface-2 border border-line-strong rounded-control pl-8 pr-3 py-1.5 text-13 text-text placeholder-text-3 outline-none focus:border-accent"
             />
           </div>
 
@@ -148,10 +148,10 @@ export default function InvestigationsPage() {
                 type="button"
                 onClick={() => setStatusFilter(st)}
                 className={[
-                  "px-2.5 py-1 rounded-control uppercase tracking-wider text-11 transition-colors",
+                  "px-2.5 py-1 rounded-control uppercase tracking-wider text-11 transition-colors border",
                   statusFilter === st
-                    ? "bg-surface-3 text-text font-medium border border-line-strong"
-                    : "text-text-3 hover:text-text",
+                    ? "bg-surface-3 text-text font-medium border-line-strong"
+                    : "border-transparent text-text-3 hover:text-text",
                 ].join(" ")}
               >
                 {st}
@@ -166,7 +166,7 @@ export default function InvestigationsPage() {
               <select
                 value={domainFilter}
                 onChange={(e) => setDomainFilter(e.target.value)}
-                className="bg-surface-2 border border-line rounded-control px-2 py-1 text-12 text-text outline-none focus:border-accent"
+                className="bg-surface-2 border border-line-strong rounded-control px-2 py-1 text-12 text-text outline-none focus:border-accent"
               >
                 <option value="all">All Domains ({domains.length})</option>
                 {domains.map((dom) => (
@@ -184,7 +184,7 @@ export default function InvestigationsPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-surface-2 border border-line rounded-control px-2 py-1 text-12 text-text outline-none focus:border-accent"
+              className="bg-surface-2 border border-line-strong rounded-control px-2 py-1 text-12 text-text outline-none focus:border-accent"
             >
               <option value="newest">Recently modified</option>
               <option value="oldest">Oldest modified</option>
@@ -300,7 +300,7 @@ export default function InvestigationsPage() {
                       <button
                         type="button"
                         onClick={() => toggleStatus(inv)}
-                        className="inline-flex items-center gap-1.5 rounded-control px-2.5 py-1 text-11 font-mono uppercase tracking-wider border border-line bg-surface-2 text-text-2 hover:text-text transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-control px-2.5 py-1 text-11 font-mono uppercase tracking-wider border border-line-strong bg-surface-2 text-text-2 hover:text-text transition-colors"
                         title="Click to toggle status"
                       >
                         <span
@@ -315,7 +315,7 @@ export default function InvestigationsPage() {
                       {/* Inspect link */}
                       <Link
                         href={`/request-explorer?id=${inv.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-control bg-surface-2 hover:bg-surface-3 border border-line text-text px-3 py-1 text-12 font-mono transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-control bg-surface-2 hover:bg-surface-3 border border-line-strong text-text px-3 py-1 text-12 font-mono transition-colors"
                       >
                         <span>Inspect</span>
                       </Link>

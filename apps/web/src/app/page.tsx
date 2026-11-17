@@ -118,7 +118,7 @@ export default function OverviewPage() {
 
               <Link
                 href="/new-investigation"
-                className="inline-flex items-center gap-2 rounded-control border border-line bg-surface-2 text-text-2 hover:text-text hover:border-line-strong px-4 py-2 text-13 font-medium transition-colors duration-150"
+                className="inline-flex items-center gap-2 rounded-control border border-line-strong bg-surface-2 text-text-2 hover:text-text hover:border-accent px-4 py-2 text-13 font-medium transition-colors duration-150"
               >
                 <ImportIcon size={15} />
                 <span>Import HAR file</span>
@@ -269,7 +269,7 @@ export default function OverviewPage() {
                   </Link>
                   <Link
                     href="/new-investigation"
-                    className="inline-flex items-center gap-2 rounded-control border border-line bg-surface-2 text-text-2 hover:text-text px-4 py-2 text-13 font-medium transition-colors"
+                    className="inline-flex items-center gap-2 rounded-control border border-line-strong bg-surface-2 text-text-2 hover:text-text px-4 py-2 text-13 font-medium transition-colors"
                   >
                     <ImportIcon size={14} />
                     <span>Import HAR</span>

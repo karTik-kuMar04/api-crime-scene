@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex items-center gap-[2px] rounded-control border border-line bg-surface-1 p-[2px]"
+      className="inline-flex items-center gap-[2px] rounded-control border border-line-strong bg-surface-1 p-[2px]"
       role="radiogroup"
       aria-label="Colour theme"
     >
