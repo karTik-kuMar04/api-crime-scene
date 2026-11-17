@@ -1,270 +1,456 @@
 import type { SVGProps } from "react";
 
-export type IconProps = SVGProps<SVGSVGElement> & {
+export interface IconProps extends SVGProps<SVGSVGElement> {
   size?: number;
-};
+  title?: string;
+}
 
-function IconBase({ size = 18, children, ...props }: IconProps) {
+function Icon({ size = 16, title, children, ...props }: IconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
       width={size}
       height={size}
-      aria-hidden={props["aria-label"] ? undefined : true}
+      aria-hidden={title ? undefined : true}
+      role={title ? "img" : undefined}
       {...props}
     >
+      {title ? <title>{title}</title> : null}
       {children}
     </svg>
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Navigation                                                          */
+/* ------------------------------------------------------------------ */
+
 export function OverviewIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M3.5 12.5 12 4l8.5 8.5" />
-      <path d="M5 10.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8.5" />
-      <path d="M9 20v-6h6v6" />
-    </IconBase>
+    <Icon {...props}>
+      {/* Gauge/dashboard: arc with needle */}
+      <path d="M12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M12 12l3-5" />
+      <path d="M8 16h8" />
+    </Icon>
   );
 }
 
 export function InvestigationsIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M7 3.5h7l5 5V18a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" />
-      <path d="M14 3.5v5h5" />
-      <path d="M8.5 12h7" />
-      <path d="M8.5 15.5h5" />
-    </IconBase>
+    <Icon {...props}>
+      {/* Case folder with tab */}
+      <path d="M4 7h4l2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" />
+      <path d="M7 12h10" />
+      <path d="M7 15h6" />
+    </Icon>
   );
 }
 
 export function CompareIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M8 4v16" />
-      <path d="M16 4v16" />
-      <path d="M4 8h8" />
-      <path d="M12 16h8" />
-      <path d="M4 16h4" />
-      <path d="M16 8h4" />
-    </IconBase>
+    <Icon {...props}>
+      {/* Two offset panes with delta mark */}
+      <rect x="3" y="4" width="8" height="14" rx="1" />
+      <rect x="13" y="6" width="8" height="14" rx="1" />
+      <path d="M15 13l2-3 2 3" strokeWidth={1.5} />
+    </Icon>
   );
 }
 
 export function RequestExplorerIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M5 7.5A2.5 2.5 0 0 1 7.5 5h9A2.5 2.5 0 0 1 19 7.5v9A2.5 2.5 0 0 1 16.5 19h-9A2.5 2.5 0 0 1 5 16.5v-9Z" />
-      <path d="M8 9.5h8" />
-      <path d="M8 13h8" />
-      <path d="M8 16.5h5" />
-      <path d="M3.5 8.5h2" />
-      <path d="M3.5 15.5h2" />
-    </IconBase>
+    <Icon {...props}>
+      {/* List rows with probe dot */}
+      <path d="M4 7h16" />
+      <path d="M4 12h12" />
+      <path d="M4 17h8" />
+      <circle cx="19" cy="15" r="2.5" />
+      <path d="M21 17l1.5 1.5" />
+    </Icon>
   );
 }
 
 export function ReportsIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M7 3.5h8l4 4V18a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" />
-      <path d="M15 3.5v5h5" />
-      <path d="M8 12h8" />
-      <path d="M8 15.5h6" />
-    </IconBase>
+    <Icon {...props}>
+      {/* Page with seal */}
+      <path d="M6 3h8l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" />
+      <path d="M14 3v4h4" />
+      <circle cx="12" cy="14" r="2.5" />
+      <path d="M12 16.5V19" />
+    </Icon>
   );
 }
 
 export function SettingsIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M12 3.5v2.2" />
-      <path d="M12 18.3v2.2" />
-      <path d="M4.9 7.1l1.5 1.5" />
-      <path d="M17.6 17.6l1.5 1.5" />
-      <path d="M3.5 12h2.2" />
-      <path d="M18.3 12h2.2" />
-      <path d="M4.9 16.9l1.5-1.5" />
-      <path d="M17.6 6.4l1.5-1.5" />
-      <circle cx="12" cy="12" r="3.25" />
-    </IconBase>
+    <Icon {...props}>
+      {/* Gear: hexagonal with centre circle */}
+      <path d="M10.3 3h3.4l.5 2.3a7 7 0 0 1 1.7 1l2.2-.7 1.7 2.9-1.6 1.6a7 7 0 0 1 0 2l1.6 1.6-1.7 2.9-2.2-.7a7 7 0 0 1-1.7 1L13.7 21h-3.4l-.5-2.3a7 7 0 0 1-1.7-1l-2.2.7-1.7-2.9 1.6-1.6a7 7 0 0 1 0-2L4.2 10.3l1.7-2.9 2.2.7a7 7 0 0 1 1.7-1L10.3 3Z" />
+      <circle cx="12" cy="12" r="2.5" />
+    </Icon>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Actions                                                             */
+/* ------------------------------------------------------------------ */
+
+export function ImportIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3v12" />
+      <path d="M8 11l4 4 4-4" />
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </Icon>
+  );
+}
+
+export function ExportIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 15V3" />
+      <path d="M8 7l4-4 4 4" />
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </Icon>
   );
 }
 
 export function SearchIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <circle cx="11" cy="11" r="5.5" />
-      <path d="m16 16 4 4" />
-    </IconBase>
+    <Icon {...props}>
+      <circle cx="10.5" cy="10.5" r="6" />
+      <path d="M15 15l5 5" />
+    </Icon>
   );
 }
 
 export function FilterIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M4 6.5h16" />
-      <path d="M7.5 12h9" />
-      <path d="M10 17.5h4" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M4 6h16" />
+      <path d="M7 12h10" />
+      <path d="M10 18h4" />
+    </Icon>
   );
 }
 
-export function UploadIcon(props: IconProps) {
+export function SortIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M12 15.5V5" />
-      <path d="m8.5 8.5 3.5-3.5 3.5 3.5" />
-      <path d="M5.5 17.5v1.25A1.25 1.25 0 0 0 6.75 20h10.5A1.25 1.25 0 0 0 18.5 18.75V17.5" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M7 4v16" />
+      <path d="M4 13l3 3 3-3" />
+      <path d="M17 20V4" />
+      <path d="M14 7l3-3 3 3" />
+    </Icon>
   );
 }
 
-export function PlusIcon(props: IconProps) {
+export function ExpandIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M12 5v14" />
-      <path d="M5 12h14" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M4 14v6h6" />
+      <path d="M20 10V4h-6" />
+      <path d="M4 20l7-7" />
+      <path d="M20 4l-7 7" />
+    </Icon>
   );
 }
 
-export function ChevronRightIcon(props: IconProps) {
+export function CollapseIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="m9 6 6 6-6 6" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M14 4v6h6" />
+      <path d="M4 14h6v6" />
+      <path d="M20 4l-6 6" />
+      <path d="M4 20l6-6" />
+    </Icon>
   );
 }
 
 export function ChevronLeftIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="m15 6-6 6 6 6" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M15 6l-6 6 6 6" />
+    </Icon>
   );
 }
 
-export function SunIcon(props: IconProps) {
+export function ChevronRightIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <circle cx="12" cy="12" r="4.25" />
-      <path d="M12 2.5v2.2" />
-      <path d="M12 19.3v2.2" />
-      <path d="m4.9 4.9 1.5 1.5" />
-      <path d="m17.6 17.6 1.5 1.5" />
-      <path d="M2.5 12h2.2" />
-      <path d="M19.3 12h2.2" />
-      <path d="m4.9 19.1 1.5-1.5" />
-      <path d="m17.6 6.4 1.5-1.5" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M9 6l6 6-6 6" />
+    </Icon>
   );
 }
 
-export function MoonIcon(props: IconProps) {
+export function ChevronUpIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5Z" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M6 15l6-6 6 6" />
+    </Icon>
   );
 }
 
-export function MonitorIcon(props: IconProps) {
+export function ChevronDownIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <rect x="3.5" y="4.5" width="17" height="11" rx="1.8" />
-      <path d="M9 19.5h6" />
-      <path d="M12 15.5v4" />
-    </IconBase>
-  );
-}
-
-export function BadgeCheckIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="M7.5 12.5 10 15l6.5-7" />
-      <circle cx="12" cy="12" r="8.5" />
-    </IconBase>
-  );
-}
-
-export function WarningIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="M12 4.5 20 18a1.5 1.5 0 0 1-1.25 2.25H5.25A1.5 1.5 0 0 1 4 18l8-13.5Z" />
-      <path d="M12 9v4.5" />
-      <path d="M12 16.5h.01" />
-    </IconBase>
-  );
-}
-
-export function FolderIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h3l1.4 2h7.1A2.5 2.5 0 0 1 20 9.5v7A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-7Z" />
-    </IconBase>
-  );
-}
-
-export function ClockIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 7v5l3.5 2" />
-    </IconBase>
-  );
-}
-
-export function NetworkIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <circle cx="6.5" cy="7.5" r="2.5" />
-      <circle cx="17.5" cy="7.5" r="2.5" />
-      <circle cx="12" cy="16.5" r="2.5" />
-      <path d="M8.5 9l2.3 4.3" />
-      <path d="M15.5 9l-2.3 4.3" />
-    </IconBase>
-  );
-}
-
-export function ShieldIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="M12 3.5 18 5.8v5.4c0 4.4-2.8 7.9-6 9.3-3.2-1.4-6-4.9-6-9.3V5.8l6-2.3Z" />
-      <path d="m9.3 12.2 1.6 1.6 3.8-4.3" />
-    </IconBase>
-  );
-}
-
-export function SparkIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="m12 2.5 1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5Z" />
-    </IconBase>
-  );
-}
-
-export function MenuIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="M4 7.5h16" />
-      <path d="M4 12h16" />
-      <path d="M4 16.5h16" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M6 9l6 6 6-6" />
+    </Icon>
   );
 }
 
 export function CloseIcon(props: IconProps) {
   return (
-    <IconBase {...props}>
-      <path d="m6 6 12 12" />
-      <path d="M18 6 6 18" />
-    </IconBase>
+    <Icon {...props}>
+      <path d="M6 6l12 12" />
+      <path d="M18 6L6 18" />
+    </Icon>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M5 12l5 5L20 7" />
+    </Icon>
+  );
+}
+
+export function AlertIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3L2 20h20L12 3Z" />
+      <path d="M12 10v4" />
+      <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none" />
+    </Icon>
+  );
+}
+
+export function ShieldIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3l7 3v5c0 5-3 9-7 10-4-1-7-5-7-10V6l7-3Z" />
+    </Icon>
+  );
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </Icon>
+  );
+}
+
+export function EyeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </Icon>
+  );
+}
+
+export function EyeOffIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M17.9 17.9A10.5 10.5 0 0 1 12 19c-6 0-10-7-10-7a17.5 17.5 0 0 1 4.1-4.9" />
+      <path d="M9.9 4.2A8 8 0 0 1 12 4c6 0 10 7 10 7a17.5 17.5 0 0 1-2 2.6" />
+      <path d="M14.1 14.1a3 3 0 1 1-4.2-4.2" />
+      <path d="M3 3l18 18" />
+    </Icon>
+  );
+}
+
+export function DomainIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3c2.5 2.5 4 5.5 4 9s-1.5 6.5-4 9" />
+      <path d="M12 3c-2.5 2.5-4 5.5-4 9s1.5 6.5 4 9" />
+    </Icon>
+  );
+}
+
+export function RequestIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      {/* Arrow out from node */}
+      <circle cx="6" cy="12" r="2" />
+      <path d="M8 12h12" />
+      <path d="M17 9l3 3-3 3" />
+    </Icon>
+  );
+}
+
+export function ResponseIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      {/* Arrow in to node */}
+      <circle cx="18" cy="12" r="2" />
+      <path d="M4 12h12" />
+      <path d="M7 9l-3 3 3 3" />
+    </Icon>
+  );
+}
+
+export function PacketIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      {/* Small node with trace lines */}
+      <circle cx="12" cy="12" r="3" />
+      <path d="M4 12h5" />
+      <path d="M15 12h5" />
+      <path d="M12 4v5" />
+      <path d="M12 15v5" />
+    </Icon>
+  );
+}
+
+export function DurationIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </Icon>
+  );
+}
+
+export function WaterfallIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      {/* Staggered horizontal bars like a waterfall chart */}
+      <path d="M4 6h8" strokeWidth={2} />
+      <path d="M6 10h10" strokeWidth={2} />
+      <path d="M5 14h6" strokeWidth={2} />
+      <path d="M8 18h12" strokeWidth={2} />
+    </Icon>
+  );
+}
+
+export function CopyIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="8" y="8" width="12" height="12" rx="2" />
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+    </Icon>
+  );
+}
+
+export function ExternalLinkIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+      <path d="M15 3h6v6" />
+      <path d="M10 14L21 3" />
+    </Icon>
+  );
+}
+
+export function MenuIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 7h16" />
+      <path d="M4 12h16" />
+      <path d="M4 17h16" />
+    </Icon>
+  );
+}
+
+export function ThemeLightIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2" />
+      <path d="M12 19v2" />
+      <path d="M5.6 5.6l1.4 1.4" />
+      <path d="M17 17l1.4 1.4" />
+      <path d="M3 12h2" />
+      <path d="M19 12h2" />
+      <path d="M5.6 18.4l1.4-1.4" />
+      <path d="M17 7l1.4-1.4" />
+    </Icon>
+  );
+}
+
+export function ThemeDarkIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M20 12.5A8.5 8.5 0 0 1 11.5 4 8.5 8.5 0 1 0 20 12.5Z" />
+    </Icon>
+  );
+}
+
+export function ThemeSystemIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="3" y="4" width="18" height="12" rx="2" />
+      <path d="M8 20h8" />
+      <path d="M12 16v4" />
+    </Icon>
+  );
+}
+
+export function CommandIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M15 4.5a3.5 3.5 0 0 1 0 7h-6V8A3.5 3.5 0 0 1 15 4.5Z" />
+      <path d="M9 11.5h6v4.5a3.5 3.5 0 0 1-6 0V11.5Z" />
+      <path d="M15 11.5a3.5 3.5 0 0 1 0 7" />
+      <path d="M9 11.5a3.5 3.5 0 0 1 0-7" />
+    </Icon>
+  );
+}
+
+export function PlusIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </Icon>
+  );
+}
+
+export function TrashIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 7h16" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+      <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12" />
+      <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+    </Icon>
+  );
+}
+
+export function FileHarIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      {/* File with 'HAR' waterfall bars inside */}
+      <path d="M6 3h8l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" />
+      <path d="M14 3v4h4" />
+      <path d="M8 13h6" strokeWidth={2} />
+      <path d="M8 16h4" strokeWidth={2} />
+    </Icon>
+  );
+}
+
+export function InfoIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 8h.01" />
+      <path d="M11 12h1v4h1" />
+    </Icon>
   );
 }
